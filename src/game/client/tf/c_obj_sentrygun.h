@@ -30,6 +30,10 @@ public:
 
 	void GetAmmoCount( int &iShells, int &iMaxShells, int &iRockets, int & iMaxRockets );
 
+	virtual float		GetMaxSentryShells1(void) const			{ return 100; }
+	virtual float		GetMaxSentryShells2(void) const			{ return 120; }
+	virtual float		GetMaxSentryShells3(void) const			{ return 144; }
+
 	void GetStatusText( wchar_t *pStatus, int iMaxStatusLen );
 
 	virtual bool	IsUpgrading( void ) const;
@@ -93,4 +97,13 @@ public:
 	virtual void CreateRocketTrails( void ) {}
 };
 
+class C_ObjectRapidFireSentrygun : public C_ObjectSentrygun
+{
+	DECLARE_CLASS(C_ObjectRapidFireSentrygun, C_ObjectSentrygun);
+	virtual float		GetMaxSentryShells1(void) const			{ return 200; }
+	virtual float		GetMaxSentryShells2(void) const			{ return 250; }
+	virtual float		GetMaxSentryShells3(void) const			{ return 300; }
+public:
+	DECLARE_CLIENTCLASS();
+};
 #endif	//C_OBJ_SENTRYGUN_H

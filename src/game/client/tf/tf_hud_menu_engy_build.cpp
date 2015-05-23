@@ -198,7 +198,9 @@ int CHudMenuEngyBuild::GetBuildingIDFromSlot( int iSlot )
 	case 4:
 		iBuilding = OBJ_TELEPORTER_EXIT;
 		break;
-
+	case 5:
+		iBuilding = OBJ_RAPID_FIRE_SENTRYGUN;
+		break;
 	default:
 		Assert( !"What slot are we asking for and why?" );
 		break;

@@ -499,6 +499,7 @@ CObjectInfo g_ObjectInfos[OBJ_LAST] =
 	CObjectInfo( "OBJ_TELEPORTER_EXIT" ),
 	CObjectInfo( "OBJ_SENTRYGUN" ),
 	CObjectInfo( "OBJ_ATTACHMENT_SAPPER" ),
+	CObjectInfo( "OBJ_RAPID_FIRE_SENTRYGUN" ),
 };
 
 //-----------------------------------------------------------------------------

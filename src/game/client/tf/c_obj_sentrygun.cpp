@@ -38,6 +38,18 @@ IMPLEMENT_CLIENTCLASS_DT(C_ObjectSentrygun, DT_ObjectSentrygun, CObjectSentrygun
 	RecvPropDataTable( "SentrygunLocalData", 0, 0, &REFERENCE_RECV_TABLE( DT_SentrygunLocalData ) ),
 END_RECV_TABLE()
 
+BEGIN_NETWORK_TABLE_NOBASE( C_ObjectRapidFireSentrygun, DT_RapidFireSentrygunLocalData )
+	RecvPropInt( RECVINFO(m_iKills) ),
+END_NETWORK_TABLE()
+
+IMPLEMENT_CLIENTCLASS_DT(C_ObjectRapidFireSentrygun, DT_ObjectRapidFireSentrygun, CObjectRapidFireSentrygun)
+	RecvPropInt( RECVINFO(m_iAmmoShells) ),
+	RecvPropInt( RECVINFO(m_iAmmoRockets) ),
+	RecvPropInt( RECVINFO(m_iState) ),
+	RecvPropDataTable( "RapidFireSentrygunLocalData", 0, 0, &REFERENCE_RECV_TABLE( DT_RapidFireSentrygunLocalData ) ),
+END_RECV_TABLE()
+
+
 //-----------------------------------------------------------------------------
 // Purpose: 
 //-----------------------------------------------------------------------------
@@ -45,7 +57,7 @@ C_ObjectSentrygun::C_ObjectSentrygun()
 {
 	m_pDamageEffects = NULL;
 	m_iOldUpgradeLevel = 0;
-	m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_1;
+	m_iMaxAmmoShells = GetMaxSentryShells1();
 }
 
 void C_ObjectSentrygun::GetAmmoCount( int &iShells, int &iMaxShells, int &iRockets, int & iMaxRockets )
@@ -66,19 +78,19 @@ void C_ObjectSentrygun::UpgradeLevelChanged()
 	case 1:	
 		{ 
 			VectorCopy( SENTRYGUN_EYE_OFFSET_LEVEL_1, m_vecViewOffset );
-			m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_1;
+			m_iMaxAmmoShells = GetMaxSentryShells1();
 			break;
 		}
 	case 2:	
 		{ 
 			VectorCopy( SENTRYGUN_EYE_OFFSET_LEVEL_2, m_vecViewOffset );
-			m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_2;
+			m_iMaxAmmoShells = GetMaxSentryShells2();
 			break;
 		}
 	case 3:	
 		{ 
 			VectorCopy( SENTRYGUN_EYE_OFFSET_LEVEL_3, m_vecViewOffset );
-			m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_3;
+			m_iMaxAmmoShells = GetMaxSentryShells3();
 			break;
 		}
 	default: 

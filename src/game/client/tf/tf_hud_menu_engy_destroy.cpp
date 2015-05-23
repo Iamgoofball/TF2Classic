@@ -211,12 +211,13 @@ void CHudMenuEngyDestroy::ErrorSound( void )
 
 int CHudMenuEngyDestroy::MapIndexToObjectID( int index )
 {
-	static int iRemapIndexToObjectID[4] = 
+	static int iRemapIndexToObjectID[5] = 
 	{
 		OBJ_SENTRYGUN,
 		OBJ_DISPENSER,
 		OBJ_TELEPORTER_ENTRANCE,
-		OBJ_TELEPORTER_EXIT
+		OBJ_TELEPORTER_EXIT,
+		OBJ_RAPID_FIRE_SENTRYGUN
 	};
 
 	Assert( index >= 0 && index <= 3 );

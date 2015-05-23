@@ -60,6 +60,20 @@ public:
 
 	void			UpgradeThink( void );
 	virtual bool	IsUpgrading( void ) const;
+	/*virtual float		GetFireRate(void) const			{ return 0.1; }
+	virtual float		GetFireRateLevel1(void) const			{ return 0.2; }
+	virtual int		GetSentryBulletDamage(void) const			{ return 16; }
+	virtual int		GetMaxSentryShells1(void) const			{ return 100; }
+	virtual int		GetMaxSentryShells2(void) const			{ return 120; }
+	virtual int		GetMaxSentryShells3(void) const			{ return 144; }*/
+
+	virtual float		GetFireRate(void) const			{ return 0.1; }
+	virtual float		GetFireRateLevel1(void) const			{ return 0.2; }
+	virtual float		GetSentryBulletDamage(void) const			{ return 16; }
+	virtual float		GetMaxSentryShells1(void) const			{ return 100; }
+	virtual float		GetMaxSentryShells2(void) const			{ return 120; }
+	virtual float		GetMaxSentryShells3(void) const			{ return 144; }
+	virtual float		GetMaxRockets(void) const			{ return 20; }
 
 private:
 
@@ -152,6 +166,28 @@ public:
 	static CTFProjectile_SentryRocket *Create( const Vector &vecOrigin, const QAngle &vecAngles, CBaseEntity *pOwner = NULL, CBaseEntity *pScorer = NULL );	
 
 	virtual void Spawn();
+};
+
+class CObjectRapidFireSentrygun : public CObjectSentrygun
+{
+public:
+	DECLARE_CLASS(CObjectRapidFireSentrygun, CObjectSentrygun);
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+
+
+	CObjectRapidFireSentrygun();
+
+	// Creation.
+	static CObjectRapidFireSentrygun *Create(const Vector &vecOrigin, const QAngle &vecAngles, CBaseEntity *pOwner = NULL, CBaseEntity *pScorer = NULL);
+
+	virtual float		GetFireRate(void) const			{ return 0.05; }
+	virtual float		GetFireRateLevel1(void) const			{ return 0.1; }
+	virtual float		GetSentryBulletDamage(void) const			{ return 5; }
+	virtual float		GetMaxSentryShells1(void) const			{ return 200; }
+	virtual float		GetMaxSentryShells2(void) const			{ return 250; }
+	virtual float		GetMaxSentryShells3(void) const			{ return 300; }
+	virtual float		GetMaxRockets(void) const			{ return 0; }
 };
 
 #endif // TF_OBJ_SENTRYGUN_H

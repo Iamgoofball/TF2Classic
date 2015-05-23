@@ -1979,7 +1979,7 @@ void CTFGameRules::PlayerKilled( CBasePlayer *pVictim, const CTakeDamageInfo &in
 		pObject->IncrementKills();
 		pInflictor = pObject;
 
-		if ( pObject->ObjectType() == OBJ_SENTRYGUN )
+		if (pObject->ObjectType() == OBJ_SENTRYGUN || pObject->ObjectType() == OBJ_RAPID_FIRE_SENTRYGUN)
 		{
 			CTFPlayer *pOwner = pObject->GetOwner();
 			if ( pOwner )

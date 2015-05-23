@@ -109,6 +109,21 @@ END_DATADESC()
 LINK_ENTITY_TO_CLASS(obj_sentrygun, CObjectSentrygun);
 PRECACHE_REGISTER(obj_sentrygun);
 
+BEGIN_NETWORK_TABLE_NOBASE(CObjectRapidFireSentrygun, DT_RapidFireSentrygunLocalData)
+	SendPropInt( SENDINFO(m_iKills), 12, SPROP_CHANGES_OFTEN ),
+END_NETWORK_TABLE()
+
+IMPLEMENT_SERVERCLASS_ST(CObjectRapidFireSentrygun, DT_ObjectRapidFireSentrygun)
+	SendPropInt( SENDINFO(m_iAmmoShells), 9, SPROP_CHANGES_OFTEN ),
+	SendPropInt( SENDINFO(m_iAmmoRockets), 6, SPROP_CHANGES_OFTEN ),
+	SendPropInt( SENDINFO(m_iState), Q_log2( SENTRY_NUM_STATES ) + 1, SPROP_UNSIGNED ),
+	SendPropDataTable("RapidFireSentrygunLocalData", 0, &REFERENCE_SEND_TABLE(DT_RapidFireSentrygunLocalData), SendProxy_SendLocalObjectDataTable),
+END_SEND_TABLE()
+
+LINK_ENTITY_TO_CLASS(obj_rapid_fire_sentrygun, CObjectRapidFireSentrygun);
+PRECACHE_REGISTER(obj_rapid_fire_sentrygun);
+
+
 ConVar tf_sentrygun_damage( "tf_sentrygun_damage", "16", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY );
 ConVar tf_sentrygun_ammocheat( "tf_sentrygun_ammocheat", "0", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY );
 ConVar tf_sentrygun_upgrade_per_hit( "tf_sentrygun_upgrade_per_hit", "25", FCVAR_CHEAT | FCVAR_DEVELOPMENTONLY );
@@ -128,6 +143,14 @@ CObjectSentrygun::CObjectSentrygun()
 	m_iHealth = SENTRYGUN_MAX_HEALTH;
 	SetType( OBJ_SENTRYGUN );
 }
+
+CObjectRapidFireSentrygun::CObjectRapidFireSentrygun()
+{
+	SetMaxHealth(SENTRYGUN_MAX_HEALTH);
+	m_iHealth = SENTRYGUN_MAX_HEALTH;
+	SetType(OBJ_RAPID_FIRE_SENTRYGUN);
+}
+
 
 //-----------------------------------------------------------------------------
 // Purpose: 
@@ -155,8 +178,8 @@ void CObjectSentrygun::Spawn()
 	// Give the Gun some ammo
 	m_iAmmoShells = 0;
 	m_iAmmoRockets = 0;
-	m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_1;
-	m_iMaxAmmoRockets = SENTRYGUN_MAX_ROCKETS;
+	m_iMaxAmmoShells = GetMaxSentryShells1();
+	m_iMaxAmmoRockets = GetMaxRockets();
 
 	m_iAmmoType = GetAmmoDef()->Index( "TF_AMMO_PRIMARY" );
 
@@ -385,14 +408,14 @@ void CObjectSentrygun::StartUpgrading( void )
 		SetModel( SENTRY_MODEL_LEVEL_2_UPGRADE );
 		m_flHeavyBulletResist = SENTRYGUN_MINIGUN_RESIST_LVL_2;
 		SetViewOffset( SENTRYGUN_EYE_OFFSET_LEVEL_2 );
-		m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_2;
+		m_iMaxAmmoShells = GetMaxSentryShells2();
 		break;
 	case 3:
 		SetModel( SENTRY_MODEL_LEVEL_3_UPGRADE );
-		m_iAmmoRockets = SENTRYGUN_MAX_ROCKETS;
+		m_iAmmoRockets = GetMaxRockets();
 		m_flHeavyBulletResist = SENTRYGUN_MINIGUN_RESIST_LVL_3;
 		SetViewOffset( SENTRYGUN_EYE_OFFSET_LEVEL_3 );
-		m_iMaxAmmoShells = SENTRYGUN_MAX_SHELLS_3;
+		m_iMaxAmmoShells = GetMaxSentryShells3();
 		break;
 	default:
 		Assert(0);
@@ -897,11 +920,11 @@ void CObjectSentrygun::Attack()
 		if ( m_iUpgradeLevel == 1 )
 		{
 			// Level 1 sentries fire slower
-			m_flNextAttack = gpGlobals->curtime + 0.2;
+			m_flNextAttack = gpGlobals->curtime + GetFireRateLevel1();
 		}
 		else
 		{
-			m_flNextAttack = gpGlobals->curtime + 0.1;
+			m_flNextAttack = gpGlobals->curtime + GetFireRate();
 		}
 	}
 	else
@@ -1028,7 +1051,7 @@ bool CObjectSentrygun::Fire()
 		info.m_vecSpread = vec3_origin;
 		info.m_flDistance = flDistToTarget + 100;
 		info.m_iAmmoType = m_iAmmoType;
-		info.m_flDamage = tf_sentrygun_damage.GetFloat();
+		info.m_flDamage = GetSentryBulletDamage();
 
 		FireBullets( info );
 

@@ -5745,7 +5745,7 @@ CBaseEntity *CTFPlayer::FindNearestObservableTarget( Vector vecOrigin, float flM
 		{
 			CBaseObject *pObj = GetObject(i);
 
-			if ( pObj && pObj->GetType() == OBJ_SENTRYGUN )
+			if (pObj && pObj->GetType() == OBJ_SENTRYGUN || pObj && pObj->GetType() == OBJ_RAPID_FIRE_SENTRYGUN)
 			{
 				pReturnTarget = pObj;
 			}

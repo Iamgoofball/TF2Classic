@@ -1071,6 +1071,7 @@ const char *CBaseObject::GetResponseRulesModifier( void )
 	case OBJ_TELEPORTER_ENTRANCE: return "objtype:teleporter_entrance"; break;
 	case OBJ_TELEPORTER_EXIT: return "objtype:teleporter_exit"; break;
 	case OBJ_SENTRYGUN: return "objtype:sentrygun"; break;
+	case OBJ_RAPID_FIRE_SENTRYGUN: return "objtype:sentrygun"; break;
 	case OBJ_ATTACHMENT_SAPPER: return "objtype:sapper"; break;
 	default:
 		break;
