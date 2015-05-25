@@ -1,0 +1,93 @@
+"Resource/UI/OptionsMenu.res"
+{
+	"ShadedBG"
+	{
+		"ControlName"		"ImagePanel"
+		"fieldName"			"ShadedBG"
+		"xpos"				"0"
+		"ypos"				"0"
+		"zpos"				"0"
+		"wide"				"f0"
+		"tall"				"f0"
+		"autoResize"		"0"
+		"pinCorner"			"0"
+		"visible"			"1"
+		"enabled"			"1"
+		"tabPosition"		"0"	
+		"fillcolor"			"0 0 0 255"
+		"alpha"				"0"
+		"PaintBackgroundType"	"0"
+	}		
+
+	"MainBG"
+	{
+		"ControlName"	"EditablePanel"
+		"fieldName"		"MainBG"
+		"xpos"			"c-350"
+		"ypos"			"c-200"
+		"zpos"			"1"
+		"wide"			"700"
+		"tall"			"400"
+		"autoResize"	"0"
+		"pinCorner"		"0"
+		"visible"		"1"
+		"enabled"		"1"
+		"border"		"TFFatLineBorderOpaque"
+	}		
+	
+	"MainBG"
+	{
+		"ControlName"	"ScrollBar"
+		"fieldName"		"MainBG"
+		"xpos"			"c-350"
+		"ypos"			"c-200"
+		"zpos"			"1"
+		"wide"			"700"
+		"tall"			"400"
+		"autoResize"	"0"
+		"pinCorner"		"0"
+		"visible"		"1"
+		"enabled"		"1"
+		"border"		"TFFatLineBorderOpaque"
+	}	
+	
+	"QuitLabel"
+	{
+		"ControlName"		"CExLabel"
+		"fieldName"			"QuitLabel"
+		"xpos"				"c-130"
+		"ypos"				"c-50"
+		"zpos"				"5"
+		"wide"				"600"
+		"tall"				"50"
+		"autoResize"		"0"
+		"pinCorner"			"0"
+		"visible"			"1"
+		"enabled"			"1"
+		"labelText"			"Settings :v"
+		"textAlignment"		"west"
+		"font"				"ScoreboardTeamNameLarge"
+		"fgcolor"			"White"
+	}	
+	
+	"CancelButton"
+	{
+		"ControlName"		"CTFMainMenuButton"
+		"fieldName"			"CancelButton"
+		"xpos"				"c200"
+		"ypos"				"c150"
+		"zpos"				"6"
+		"wide"				"130"
+		"tall"				"45"
+		"visible"			"1"
+		"enabled"			"1"
+		"labelText" 		"Cancel"
+		"DefaultText"		"Button.ArmedTextColor"
+		"ArmedText" 		"HudWhite"
+		"DepressedText" 	"Gray"	
+		"textAlignment"		"west"
+		"font"				"MenuSmallFont"
+		"command"			"vguicancel"		
+	}		
+}
+		
