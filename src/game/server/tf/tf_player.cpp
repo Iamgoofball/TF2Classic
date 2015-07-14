@@ -969,6 +969,9 @@ void CTFPlayer::Regenerate( void )
 	{
 		m_Shared.RemoveCond( TF_COND_SLOWED );
 	}
+
+	//Fill Spy cloak
+	m_Shared.SetSpyCloakMeter(100.0f);
 }
 
 //-----------------------------------------------------------------------------
@@ -1064,6 +1067,14 @@ void CTFPlayer::GiveDefaultItems()
 	// Give a builder weapon for each object the playerclass is allowed to build
 	ManageBuilderWeapons( pData );
 
+	// Equip weapons set by tf_player_equip
+	CBaseEntity	*pWeaponEntity = NULL;
+	while ((pWeaponEntity = gEntList.FindEntityByClassname(pWeaponEntity, "tf_player_equip")) != NULL)
+	{
+		pWeaponEntity->Touch(this);
+	}
+
+	SwitchToNextBestWeapon(NULL);
 }
 
 //-----------------------------------------------------------------------------
@@ -5197,44 +5208,6 @@ CTFTeam *CTFPlayer::GetOpposingTFTeam( void )
 	{
 		return TFTeamMgr()->GetTeam( TF_TEAM_RED );
 	}
-}
-
-void CTFPlayer::GetOpposingTFTeamList(CUtlVector<CTFTeam *> *pTeamList)
-{
-	if (TFGameRules()->IsDeathmatch())
-	{
-		pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_RED));
-		return;
-	}
-
-	int iTeam = GetTeamNumber();
-	switch (iTeam)
-	{
-		case TF_TEAM_RED:
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_BLUE));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_GREEN));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_YELLOW));
-			break;
-
-		case TF_TEAM_BLUE:
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_RED));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_GREEN));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_YELLOW));
-			break;
-
-		case TF_TEAM_GREEN:
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_RED));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_BLUE));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_YELLOW));
-			break;
-
-		case TF_TEAM_YELLOW:
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_RED));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_BLUE));
-			pTeamList->AddToTail(TFTeamMgr()->GetTeam(TF_TEAM_GREEN));
-			break;
-	}
-
 }
 
 //-----------------------------------------------------------------------------

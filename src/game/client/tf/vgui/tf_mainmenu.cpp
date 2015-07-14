@@ -2,10 +2,18 @@
 #include "tf_mainmenu.h"
 #include "tf_mainmenu_interface.h"
 
-#include "tf_gamerules.h"
-#include "tf_shareddefs.h"
-#include <filesystem.h>
-#include <vgui_controls/AnimationController.h>
+#include "panels/tf_mainmenupanel.h"
+#include "panels/tf_pausemenupanel.h"
+#include "panels/tf_backgroundpanel.h"
+#include "panels/tf_loadoutpanel.h"
+#include "panels/tf_shadebackgroundpanel.h"
+#include "panels/tf_optionsdialog.h"
+#include "panels/tf_optionsadvancedpanel.h"
+#include "panels/tf_optionsmousepanel.h"
+#include "panels/tf_optionskeyboardpanel.h"
+#include "panels/tf_optionsaudiopanel.h"
+#include "panels/tf_optionsvideopanel.h"
+#include "panels/tf_quitdialogpanel.h"
 
 using namespace vgui;
 // memdbgon must be the last include file in a .cpp file!!!
@@ -44,7 +52,7 @@ CTFMainMenu::CTFMainMenu(VPANEL parent) : vgui::EditablePanel(NULL, "MainMenu")
 
 	SetDragEnabled(false);
 	SetShowDragHelper(false);
-	SetProportional(false);
+	SetProportional(true);
 	SetVisible(true);
 
 	int width, height;
@@ -53,17 +61,32 @@ CTFMainMenu::CTFMainMenu(VPANEL parent) : vgui::EditablePanel(NULL, "MainMenu")
 	SetPos(0, 0);
 
 	m_pPanels.SetSize(COUNT_MENU);
-	AddMenuPanel(new CTFMainMenuPanel(this), MAIN_MENU);
-	AddMenuPanel(new CTFMainMenuPausePanel(this), PAUSE_MENU);
-	AddMenuPanel(new CTFMainMenuBackgroundPanel(this), BACKGROUND_MENU);
-	AddMenuPanel(new CTFMainMenuQuitPanel(this), QUIT_MENU);
-	AddMenuPanel(new CTFMainMenuOptionsPanel(this), OPTIONS_MENU);
-
-	GetMenuPanel(MAIN_MENU)->SetVisible(true);
-	GetMenuPanel(PAUSE_MENU)->SetVisible(false);
-	GetMenuPanel(BACKGROUND_MENU)->SetVisible(true);
-	GetMenuPanel(QUIT_MENU)->SetVisible(false);
-	GetMenuPanel(OPTIONS_MENU)->SetVisible(false);
+	AddMenuPanel(new CTFMainMenuPanel(this, "CTFMainMenuPanel"), MAIN_MENU);
+	AddMenuPanel(new CTFPauseMenuPanel(this, "CTFPauseMenuPanel"), PAUSE_MENU);
+	AddMenuPanel(new CTFBackgroundPanel(this, "CTFBackgroundPanel"), BACKGROUND_MENU);
+	AddMenuPanel(new CTFLoadoutPanel(this, "CTFLoadoutPanel"), LOADOUT_MENU);
+	AddMenuPanel(new CTFShadeBackgroundPanel(this, "CTFShadeBackgroundPanel"), SHADEBACKGROUND_MENU);
+	AddMenuPanel(new CTFQuitDialogPanel(this, "CTFQuitDialogPanel"), QUIT_MENU);
+	AddMenuPanel(new CTFOptionsDialog(this, "CTFOptionsDialog"), OPTIONSDIALOG_MENU);
+	AddMenuPanel(new CTFOptionsAdvancedPanel(this, "CTFOptionsAdvancedPanel"), OPTIONSADV_MENU);
+	AddMenuPanel(new CTFOptionsMousePanel(this, "CTFOptionsMousePanel"), OPTIONSMOUSE_MENU);
+	AddMenuPanel(new CTFOptionsKeyboardPanel(this, "CTFOptionsKeyboardPanel"), OPTIONSKEYBOARD_MENU);
+	AddMenuPanel(new CTFOptionsAudioPanel(this, "CTFOptionsAudioPanel"), OPTIONSAUDIO_MENU);
+	AddMenuPanel(new CTFOptionsVideoPanel(this, "CTFOptionsVideoPanel"), OPTIONSVIDEO_MENU);
+	//AddMenuPanel(new CGameConsoleDialog(this, "CTFOptionsVideoPanel"), OPTIONSVIDEO_MENU);
+	HidePanel(MAIN_MENU);
+	ShowPanel(PAUSE_MENU);
+	ShowPanel(BACKGROUND_MENU);
+	HidePanel(LOADOUT_MENU);
+	HidePanel(SHADEBACKGROUND_MENU);
+	HidePanel(QUIT_MENU);
+	HidePanel(OPTIONSDIALOG_MENU);
+	HidePanel(OPTIONSADV_MENU);
+	HidePanel(OPTIONSMOUSE_MENU);
+	HidePanel(OPTIONSKEYBOARD_MENU);
+	HidePanel(OPTIONSAUDIO_MENU);
+	HidePanel(OPTIONSVIDEO_MENU);
+	
 	bInGameLayout = false;
 	vgui::ivgui()->AddTickSignal(GetVPanel(), 100);
 }
@@ -78,13 +101,13 @@ CTFMainMenu::~CTFMainMenu()
 	g_GameUIDLL.Unload();
 }
 
-void CTFMainMenu::AddMenuPanel(CTFMainMenuPanelBase *m_pPanel, int iPanel)
+void CTFMainMenu::AddMenuPanel(CTFMenuPanelBase *m_pPanel, int iPanel)
 {
 	m_pPanels[iPanel] = m_pPanel;
 	m_pPanel->SetZPos(iPanel);
 }
 
-CTFMainMenuPanelBase* CTFMainMenu::GetMenuPanel(int iPanel)
+CTFMenuPanelBase* CTFMainMenu::GetMenuPanel(int iPanel)
 {
 	return m_pPanels[iPanel];
 }
@@ -153,6 +176,10 @@ void CTFMainMenu::OnTick()
 	if (!engine->IsDrawingLoadingImage() && !IsVisible())
 	{
 		SetVisible(true);
+	} 
+	else if (engine->IsDrawingLoadingImage() && IsVisible())
+	{
+		SetVisible(false);
 	}
 	if (!InGame() && bInGameLayout)
 	{
@@ -164,6 +191,7 @@ void CTFMainMenu::OnTick()
 		GameLayout();
 		bInGameLayout = true;
 	}
+
 };
 
 void CTFMainMenu::OnThink()
