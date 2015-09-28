@@ -232,6 +232,8 @@ private:
 	void OnAddDisguised( void );
 	void OnAddSlowed( void );
 	void OnAddCritboosted(void);
+	void OnAddFirearm(void);
+	void OnAddHydraulicHammers(void);
 
 	void OnRemoveZoomed( void );
 	void OnRemoveBurning( void );
@@ -242,6 +244,8 @@ private:
 	void OnRemoveTeleported( void );
 	void OnRemoveSlowed( void );
 	void OnRemoveCritboosted(void);
+	void OnRemoveFirearm(void);
+	void OnRemoveHydraulicHammers( void );
 
 	float GetCritMult( void );
 

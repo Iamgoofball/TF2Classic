@@ -477,6 +477,12 @@ void CTFPlayerShared::OnConditionAdded( int nCond )
 		OnAddCritboosted();
 		break;
 
+	case TF_COND_POWERUP_FIREARM:
+		OnAddFirearm();
+		break;
+	case TF_COND_POWERUP_HYDRAULIC_HAMMERS:
+		OnAddHydraulicHammers();
+		break;
 	default:
 		break;
 	}
@@ -532,6 +538,12 @@ void CTFPlayerShared::OnConditionRemoved( int nCond )
 	case TF_COND_POWERUP_CRITDAMAGE:
 	case TF_COND_CRITBOOSTED:
 		OnRemoveCritboosted();
+		break;
+	case TF_COND_POWERUP_FIREARM:
+		OnRemoveFirearm();
+		break;
+	case TF_COND_POWERUP_HYDRAULIC_HAMMERS:
+		OnRemoveHydraulicHammers();
 		break;
 
 	default:
@@ -851,6 +863,26 @@ void CTFPlayerShared::ConditionGameRulesThink( void )
 			}
 		}
 	}
+	if (InCond(TF_COND_POWERUP_FIREARM))
+	{
+		if (GetConditionDuration(TF_COND_POWERUP_FIREARM))
+		{
+			if (gpGlobals->curtime > gpGlobals->curtime + GetConditionDuration(TF_COND_POWERUP_FIREARM))
+			{
+				RemoveCond(TF_COND_POWERUP_FIREARM);
+			}
+		}
+	}
+	if (InCond(TF_COND_POWERUP_HYDRAULIC_HAMMERS))
+	{
+		if (GetConditionDuration(TF_COND_POWERUP_HYDRAULIC_HAMMERS))
+		{
+			if (gpGlobals->curtime > gpGlobals->curtime + GetConditionDuration(TF_COND_POWERUP_HYDRAULIC_HAMMERS))
+			{
+				RemoveCond(TF_COND_POWERUP_HYDRAULIC_HAMMERS);
+			}
+		}
+	}
 	if ( InCond( TF_COND_STEALTHED_BLINK ) )
 	{
 		if ( TF_SPY_STEALTH_BLINKTIME/*tf_spy_stealth_blink_time.GetFloat()*/ < ( gpGlobals->curtime - m_flLastStealthExposeTime ) )
@@ -1055,6 +1087,101 @@ void CTFPlayerShared::OnRemoveTeleported( void )
 {
 #ifdef CLIENT_DLL
 	m_pOuter->OnRemoveTeleported();
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayerShared::OnAddFirearm(void)
+{
+#ifdef SERVER_DLL
+	CTFPlayer *pTFPlayer = dynamic_cast<CTFPlayer*>(m_pOuter);
+	CTFWeaponBase *pWeapon = pTFPlayer->Weapon_GetWeaponByBucket(0);
+	const char *pszWeaponName = WeaponIdToAlias(TF_WEAPON_FIREARM);
+	if (pWeapon)
+	{
+		pTFPlayer->DropFakeWeapon(pWeapon);
+		pTFPlayer->Weapon_Detach(pWeapon);
+		pWeapon->WeaponReset();
+		UTIL_Remove(pWeapon);
+		pWeapon = NULL;
+	}
+	if (!pWeapon)
+	{
+		pTFPlayer->m_Shared.SetDesiredWeaponIndex(TF_WEAPON_FIREARM);
+		pTFPlayer->GiveNamedItem(pszWeaponName);
+		pTFPlayer->m_Shared.SetDesiredWeaponIndex(TF_WEAPON_NONE);
+	}
+#endif
+}
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayerShared::OnRemoveFirearm(void)
+{
+#ifdef SERVER_DLL
+	CTFPlayer *pTFPlayer = dynamic_cast<CTFPlayer*>(m_pOuter);
+	CTFWeaponBase *pWeapon = (CTFWeaponBase *)pTFPlayer->Weapon_OwnsThisID(TF_WEAPON_FIREARM);
+	if (pWeapon)
+	{
+		pTFPlayer->Weapon_Detach(pWeapon);
+		pWeapon->WeaponReset();
+		UTIL_Remove(pWeapon);
+		pWeapon = NULL;
+	}
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayerShared::OnAddHydraulicHammers(void)
+{
+#ifdef SERVER_DLL
+	CTFPlayer *pTFPlayer = dynamic_cast<CTFPlayer*>(m_pOuter);
+	CTFWeaponBase *pWeapon = pTFPlayer->Weapon_GetWeaponByBucket(2);
+	const char *pszWeaponName = WeaponIdToAlias(TF_WEAPON_HYDRAULIC_HAMMERS);
+	if (pWeapon)
+	{
+		pTFPlayer->DropFakeWeapon(pWeapon);
+		pTFPlayer->Weapon_Detach(pWeapon);
+		pWeapon->WeaponReset();
+		UTIL_Remove(pWeapon);
+		pWeapon = NULL;
+	}
+	if (!pWeapon)
+	{
+		pTFPlayer->m_Shared.SetDesiredWeaponIndex(TF_WEAPON_HYDRAULIC_HAMMERS);
+		pTFPlayer->GiveNamedItem(pszWeaponName);
+		pTFPlayer->m_Shared.SetDesiredWeaponIndex(TF_WEAPON_NONE);
+	}
+#endif
+}
+
+//-----------------------------------------------------------------------------
+// Purpose: 
+//-----------------------------------------------------------------------------
+void CTFPlayerShared::OnRemoveHydraulicHammers(void)
+{
+#ifdef SERVER_DLL
+	CTFPlayer *pTFPlayer = dynamic_cast<CTFPlayer*>(m_pOuter);
+	CTFWeaponBase *pWeapon = (CTFWeaponBase *)pTFPlayer->Weapon_OwnsThisID(TF_WEAPON_HYDRAULIC_HAMMERS);
+	const char *pszWeaponName = WeaponIdToAlias(TF_WEAPON_CROWBAR);
+	if (pWeapon)
+	{
+		// Check Use button, always replace pistol
+		pTFPlayer->Weapon_Detach(pWeapon);
+		pWeapon->WeaponReset();
+		UTIL_Remove(pWeapon);
+		pWeapon = NULL;
+	}
+	if (!pWeapon)
+	{
+		pTFPlayer->m_Shared.SetDesiredWeaponIndex(TF_WEAPON_CROWBAR);
+		pTFPlayer->GiveNamedItem(pszWeaponName);
+		pTFPlayer->m_Shared.SetDesiredWeaponIndex(TF_WEAPON_NONE);
+	}
 #endif
 }
 

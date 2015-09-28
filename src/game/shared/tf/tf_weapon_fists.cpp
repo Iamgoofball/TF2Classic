@@ -21,16 +21,21 @@
 //
 // Weapon Fists tables.
 //
-IMPLEMENT_NETWORKCLASS_ALIASED( TFFists, DT_TFWeaponFists )
+#define CREATE_SIMPLE_WEAPON_TABLE( WpnName, entityname )			\
+																	\
+	IMPLEMENT_NETWORKCLASS_ALIASED( WpnName, DT_##WpnName )	\
+															\
+	BEGIN_NETWORK_TABLE( C##WpnName, DT_##WpnName )			\
+	END_NETWORK_TABLE()										\
+															\
+	BEGIN_PREDICTION_DATA( C##WpnName )						\
+	END_PREDICTION_DATA()									\
+															\
+	LINK_ENTITY_TO_CLASS( entityname, C##WpnName );			\
+	PRECACHE_WEAPON_REGISTER( entityname );
 
-BEGIN_NETWORK_TABLE( CTFFists, DT_TFWeaponFists )
-END_NETWORK_TABLE()
-
-BEGIN_PREDICTION_DATA( CTFFists )
-END_PREDICTION_DATA()
-
-LINK_ENTITY_TO_CLASS( tf_weapon_fists, CTFFists );
-PRECACHE_WEAPON_REGISTER( tf_weapon_fists );
+CREATE_SIMPLE_WEAPON_TABLE(TFFists, tf_weapon_fists)
+CREATE_SIMPLE_WEAPON_TABLE(TFHydraulic_Hammers, tf_weapon_hydraulic_hammers)
 
 //=============================================================================
 //
@@ -135,4 +140,16 @@ void CTFFists::DoViewModelAnimation( void )
 	}
 
 	SendWeaponAnim( act );
+}
+
+bool CTFHydraulic_Hammers::Holster(CBaseCombatWeapon *pSwitchingTo)
+{
+	CTFPlayer *pPlayer = GetTFPlayerOwner();
+	if (!pPlayer)
+		return false;
+	if (pPlayer->m_Shared.InCond(TF_COND_POWERUP_HYDRAULIC_HAMMERS))
+	{
+		return false;
+	}
+	return BaseClass::Holster(pSwitchingTo);
 }

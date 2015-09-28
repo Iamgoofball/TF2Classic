@@ -14,6 +14,7 @@
 #ifdef CLIENT_DLL
 #define CTFSMG C_TFSMG
 #define CTFSMG_Scout C_TFSMG_Scout
+#define CTFFirearm C_TFFirearm
 #endif
 
 //=============================================================================
@@ -52,5 +53,17 @@ public:
 
 	virtual int		GetWeaponID(void) const			{ return TF_WEAPON_SMG_SCOUT; }
 };
+
+class CTFFirearm : public CTFSMG
+{
+public:
+	DECLARE_CLASS(CTFFirearm, CTFSMG);
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+
+	virtual bool	Holster(CBaseCombatWeapon *pSwitchingTo);
+	virtual int		GetWeaponID(void) const			{ return TF_WEAPON_FIREARM; }
+};
+
 
 #endif // TF_WEAPON_SMG_H

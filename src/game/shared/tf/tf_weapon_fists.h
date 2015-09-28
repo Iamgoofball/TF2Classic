@@ -14,6 +14,7 @@
 
 #ifdef CLIENT_DLL
 #define CTFFists C_TFFists
+#define CTFHydraulic_Hammers C_TFHydraulic_Hammers
 #endif
 
 //=============================================================================
@@ -43,6 +44,17 @@ public:
 private:
 
 	CTFFists( const CTFFists & ) {}
+};
+
+class CTFHydraulic_Hammers : public CTFFists
+{
+public:
+	DECLARE_CLASS(CTFHydraulic_Hammers, CTFFists);
+	DECLARE_NETWORKCLASS();
+	DECLARE_PREDICTABLE();
+
+	virtual bool	Holster(CBaseCombatWeapon *pSwitchingTo);
+	virtual int		GetWeaponID(void) const			{ return TF_WEAPON_HYDRAULIC_HAMMERS; }
 };
 
 #endif // TF_WEAPON_FISTS_H
